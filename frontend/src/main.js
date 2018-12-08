@@ -6,6 +6,9 @@ import "./registerServiceWorker";
 import 'roboto-fontface/css/roboto/roboto-fontface.css'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 
+// import global string filters
+import "./filters";
+
 Vue.config.productionTip = false;
 
 new Vue({

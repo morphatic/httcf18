@@ -2,7 +2,6 @@
   <v-app>
     <v-navigation-drawer
       app
-      fixed
       clipped
       persistent
       :mini-variant="miniVariant"

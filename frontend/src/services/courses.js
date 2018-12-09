@@ -55,3 +55,23 @@ export const getCourse = async (id, params) => {
   params = params || {};
   return await courses.get(id, params);
 };
+
+
+/**
+ * updateCourse(id, course, params)
+ * 
+ * This function updates the data associated with a course.
+ * 
+ * @param  {number} id     The ID of the course to be retrieved
+ * @param  {object} course The course data to be updated
+ * @param  {object} params Any additional feathers query params
+ * @return {object}        The updated course object
+ */
+export const updateCourse = async (id, course, params) => {
+  // make sure a course ID was specified
+  if ("undefined" === typeof id) {
+    throw new Error("Please provide a valid course ID.");
+  }
+  params = params || {};
+  return await courses.patch(id, course, params);
+}

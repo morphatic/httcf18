@@ -117,7 +117,7 @@ export default {
       // if everthing is okay...
       if (valid) {
         try { // try to update the course in the database
-          const course = await updateCourse(this.course);
+          const course = await updateCourse(this.course.id, this.course);
           // then redirect back to the Courses page with
           // a success message
           this.$router.replace({

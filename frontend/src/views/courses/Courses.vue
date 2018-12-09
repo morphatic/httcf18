@@ -91,8 +91,9 @@ export default {
       }
     }
   },
-  mounted() {
-    this.alert = this.$route.query;
+  async mounted() {
+    const query = await this.$route.query;
+    this.alert = query.status ? query : null;
   }
 }
 </script>

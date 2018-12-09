@@ -18,29 +18,66 @@
     </p>
     <v-card>
       <v-data-table
+        v-model="selected"
         :headers="headers"
         :items="students.data"
+        select-all
         item-key="id"
         :total-items="students.total"
         :pagination.sync="pagination"
         :rows-per-page-items="rowsPerPageItems"
         must-sort>
-        <template slot="items" slot-scope="{item}">
-          <td class="text-xs-center">
-            <router-link :to="`/students/${item.id}`">
-              {{ item.first_name }} {{ item.last_name }}
-            </router-link>
-          </td>
-          <td>{{ item.dob.substr(0, 10) }}</td>
-          <td>{{ item.gender }}</td>
+        <template slot="items" slot-scope="props">
+          <tr :active="props.selected" @click="props.selected = !props.selected">
+            <td>
+              <v-checkbox
+                v-model="props.selected"
+                primary
+                hide-details
+              ></v-checkbox>
+            </td>
+            <td>
+              <router-link :to="`/students/${props.item.id}`">
+                {{ props.item.first_name }} {{ props.item.last_name }}
+              </router-link>
+            </td>
+            <td>{{ props.item.dob.substr(0, 10) }}</td>
+            <td>{{ props.item.gender }}</td>
+          </tr>
         </template>
       </v-data-table>
+      <v-container fluid>
+        <v-layout row justify-space-around align-top>
+          <v-flex xs5>
+            <v-select
+              v-model="course"
+              class="item"
+              label="Pick a Course"
+              item-text="code"
+              item-value="id"
+              item-key="id"
+              :items="courses"
+              solo
+              clearable
+            ></v-select>
+          </v-flex>
+          <v-flex xs5>
+            <v-btn
+              class="secondary item"
+              large block
+              :disabled="allowCourseAssociation"
+              @click="associateStudentsWithCourse"
+            >Add Selected Students to Course</v-btn>
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-card>
   </div>
 </template>
 
 <script>
 import { getStudents } from "@/services/students";
+import { getCourses, updateCourse } from "@/services/courses";
 export default {
   name: "Students",
   data: () => ({
@@ -48,6 +85,8 @@ export default {
       total: 0,
       data: []
     },
+    selected: [],
+    course: null,
     rowsPerPageItems: [10, 25, 50],
     pagination: {
       descending: false,
@@ -59,8 +98,7 @@ export default {
     headers: [
       {
         text: "Name",
-        value: "last_name",
-        align: "center"
+        value: "last_name"
       },
       {
         text: "Birthday",
@@ -89,6 +127,35 @@ export default {
         total: 0,
         data: []
       }
+    },
+    courses: {
+      async get() {
+        let c = await getCourses({query:{$limit: 50, $sort:{code: 1}}});
+        return c.data;
+      },
+      default: []
+    }
+  },
+  computed: {
+    allowCourseAssociation() {
+      return !this.course || this.selected.length == 0;
+    }
+  },
+  methods: {
+    async associateStudentsWithCourse() {
+      let crs = this.courses.filter(s => s.id === this.course)[0];
+      crs.students = this.selected.map(c => c.id);
+      let res;
+      try {
+        res = await updateCourse(crs.id, crs);
+        res = {
+          status: 'success',
+          message: `Success! Selected students(s) added to ${res.code}!`
+        };
+      } catch(err) {
+        res = err;
+      }
+      this.alert = res;
     }
   },
   async mounted() {

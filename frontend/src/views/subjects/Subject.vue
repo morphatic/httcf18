@@ -1,6 +1,6 @@
 <template>
   <div class="container page">
-    <h1>{{ subject.code }}</h1>
+    <h1>Subject: {{ subject.code }}</h1>
     <v-alert
       v-if="apiError"
       v-model="apiError"
@@ -36,6 +36,32 @@
       ></v-textarea>
       <v-btn :disabled="!edited" @click="submit" class="secondary">Submit</v-btn>
     </form>
+    <v-layout row mt-4>
+      <v-flex xs12 sm6>
+        <v-card>
+          <v-toolbar color="secondary" dark>
+            <v-toolbar-title>Courses</v-toolbar-title>
+          </v-toolbar>
+          <v-list two-line>
+            <template v-for="course in subject.courses">
+              <v-list-tile
+                :key="course.id"
+                avatar
+                @click="$router.push('/courses/' + course.id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon>school</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title v-html="course.code"></v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider :key="course.id + 'd'"></v-divider>
+            </template>
+          </v-list>
+        </v-card>
+      </v-flex>
+    </v-layout>
   </div>
 </template>
 

@@ -47,6 +47,58 @@
       ></v-select>
       <v-btn :disabled="!edited" @click="submit" class="secondary">Submit</v-btn>
     </form>
+    <v-container grid-list-md text-xs-center>
+    <v-layout row mt-4>
+      <v-flex xs6>
+        <v-card>
+          <v-toolbar color="secondary" dark>
+            <v-toolbar-title>Students</v-toolbar-title>
+          </v-toolbar>
+          <v-list two-line>
+            <template v-for="student in course.students">
+              <v-list-tile
+                :key="student.id"
+                avatar
+                @click="$router.push('/students/' + student.id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon>school</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title v-html="`${student.first_name} ${student.last_name}`"></v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider :key="student.id + 'd'"></v-divider>
+            </template>
+          </v-list>
+        </v-card>
+      </v-flex>
+      <v-flex xs6>
+        <v-card>
+          <v-toolbar color="secondary" dark>
+            <v-toolbar-title>Subjects</v-toolbar-title>
+          </v-toolbar>
+          <v-list two-line>
+            <template v-for="subject in course.subjects">
+              <v-list-tile
+                :key="subject.id"
+                avatar
+                @click="$router.push('/subjects/' + subject.id)"
+              >
+                <v-list-tile-avatar>
+                  <v-icon>school</v-icon>
+                </v-list-tile-avatar>
+                <v-list-tile-content>
+                  <v-list-tile-title v-html="subject.code"></v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+              <v-divider :key="subject.id + 'd'"></v-divider>
+            </template>
+          </v-list>
+        </v-card>
+      </v-flex>
+    </v-layout>
+    </v-container>
   </div>
 </template>
 
